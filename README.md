@@ -2,15 +2,19 @@
 
 The relay is the small free Cloudflare service that links any AI app that supports MCP connectors to an open Realot editor.
 
-## You (the engine's builder): set it up ONCE for everybody
-1. Put the whole engine, including this `relay` folder, in your GitHub repo.
-2. Open your engine → any project → press **AI** → **Create relay on Cloudflare** → sign in → **Deploy**.
-3. Copy the address Cloudflare shows (ends in `.workers.dev`).
-4. Open `project/editor/bridge/bridge-config.js`, paste it as `DEFAULT_RELAY_URL`, and redeploy your site.
-5. (Recommended) In Cloudflare → your worker → Settings → Variables, set `ALLOWED_ORIGINS` to your site, e.g. `https://yourname.github.io`, so only your engine can use the relay.
+## How it is set up
+The engine ships with the shared relay already built in (`DEFAULT_RELAY_URL` in `project/editor/bridge/bridge-config.js` is `https://realot-bridge.realot.workers.dev`).
 
-## Your users: nothing to install or deploy
-They open a project → press **AI** → **Connect** → **Copy link** → in your AI app: *Settings → Connectors (or MCP servers) → Add custom connector* → paste → Add. Each user gets their own private link; nobody can see anybody else's project.
+**Your users:** open a project → press **AI** → copy the link → add it in their AI app (*Settings → Connectors / MCP servers → Add custom connector*) → press **Connect**. Each user gets their own private link; nobody can see anybody else's project.
+
+**Time allowance:** on the shared relay the AI gets `AI_MINUTES_PER_DAY` active minutes per 24 hours (default 30, set in `bridge-config.js`). Only time the AI is actually working counts: a tool call running, plus up to `AI_IDLE_GRACE_SECONDS` of "thinking" between calls. Being connected while idle is free. When it runs out the panel says it resets every 24 hours. The limit is tracked in the user's browser, so it keeps honest users in line but isn't tamper-proof.
+
+**More time:** at the bottom of the AI panel users can click to deploy their own copy of this relay to a free Cloudflare account, paste its `.workers.dev` address, and use it with no time limit. Set `RELAY_REPO_URL` in `bridge-config.js` to your engine's GitHub address so that button works in one click.
+
+## Deploying / updating the shared relay (you, once)
+1. Put the engine, including this `relay` folder, in your GitHub repo.
+2. Deploy from Cloudflare (*Workers & Pages → Create → Import a repository*, root directory `relay`) or run `npx wrangler deploy` inside `relay`.
+3. (Recommended) In Cloudflare → your worker → Settings → Variables, set `ALLOWED_ORIGINS` to your site, e.g. `https://yourname.github.io`, so only your engine can use the relay.
 
 ## Safety
 * Nothing connects until the user presses **Connect**; the toolbar dot shows the state.

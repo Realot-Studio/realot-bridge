@@ -1,5 +1,5 @@
 {
-  "name": "realot-bridge",
+  "name": "realot-bridge-relay",
   "private": true,
   "type": "module",
   "scripts": {

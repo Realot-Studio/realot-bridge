@@ -6,7 +6,7 @@ compatibility_date = "2025-01-01"
 # Optional lock: only editors loaded from these sites may connect, e.g.
 # ALLOWED_ORIGINS = "https://yourname.github.io"
 # Leave empty to allow any site.
-ALLOWED_ORIGINS = "https://realot-hub.pages.dev/"
+ALLOWED_ORIGINS = ""
 
 [[durable_objects.bindings]]
 name = "ROOM"
