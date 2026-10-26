@@ -306,7 +306,7 @@
   },
   {
     "name": "list_assets",
-    "description": "List imported sprites, animation-frame images, and audio assets without returning their binary data. Use the keys in SpriteRenderer, AudioSource, animation clips, and tilesets.",
+    "description": "List imported images and audio without returning binary data, grouped like the editor's Project folders: Sprites, Animation Clips (uploaded animation frames) and Tiles (tileset images), plus Audio. Use the keys in SpriteRenderer, AudioSource, animation clips, and tilesets.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -315,9 +315,12 @@
           "enum": [
             "all",
             "sprite",
-            "audio",
-            "frame"
-          ]
+            "animation",
+            "frame",
+            "tile",
+            "audio"
+          ],
+          "description": "animation (alias frame) = Animation Clips folder; tile = Tiles folder."
         },
         "query": {
           "type": "string",
@@ -334,7 +337,7 @@
   },
   {
     "name": "begin_asset_upload",
-    "description": "Start uploading a sprite, audio file, animation source, or custom tileset image. Then send sequential base64 chunks with append_asset_upload_chunk and finish with complete_asset_upload. The editor must be open and connected. Maximum 12 MiB per file. Purpose 'project-zip' (a .realot/.zip project, max 12 MiB) REPLACES the entire open project and asks the person at the editor to confirm.",
+    "description": "Start uploading a custom asset: a sprite, audio file, animation source, tileset image, or a loose image for the Animation Clips folder (purpose 'frame-asset') or Tiles folder (purpose 'tile-asset'). Then send sequential base64 chunks with append_asset_upload_chunk and finish with complete_asset_upload. The editor must be open and connected. Maximum 20 MiB per file. Purpose 'project-zip' (a .realot/.zip project, max 20 MiB) REPLACES the entire open project and asks the person at the editor to confirm. Animation uploads land in the Animation Clips folder; tileset uploads land in the Tiles folder.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -349,7 +352,7 @@
         "size_bytes": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 12582912
+          "maximum": 20971520
         },
         "purpose": {
           "type": "string",
@@ -362,6 +365,8 @@
             "animation-sheet",
             "tileset-sheet",
             "tileset-tile",
+            "frame-asset",
+            "tile-asset",
             "project-zip"
           ]
         },
@@ -390,6 +395,11 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 64
+        },
+        "group": {
+          "type": "string",
+          "maxLength": 80,
+          "description": "Optional heading to list a frame-asset or tile-asset under in its folder."
         }
       },
       "required": [
@@ -461,7 +471,7 @@
   },
   {
     "name": "rename_asset",
-    "description": "Rename an imported sprite, frame, or audio asset while preserving its key and references.",
+    "description": "Rename an imported sprite, animation frame, tile or audio asset while preserving its key and references.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -473,6 +483,8 @@
           "enum": [
             "sprite",
             "frame",
+            "animation",
+            "tile",
             "audio"
           ]
         },
@@ -503,6 +515,8 @@
           "enum": [
             "sprite",
             "frame",
+            "animation",
+            "tile",
             "audio"
           ]
         },
@@ -749,6 +763,86 @@
       "required": [
         "entity_id",
         "patch"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "add_animation_frames",
+    "description": "Add images that are already in the project (sprites, Animation Clips frames, or Tiles) to an animation clip as frames. Use list_assets for keys and list_animations for entity/clip ids. Optional index inserts at that position instead of appending. Undoable.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "clip_id": {
+          "type": "string"
+        },
+        "asset_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "maxItems": 200
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "entity_id",
+        "clip_id",
+        "asset_keys"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "set_tileset_slot",
+    "description": "Put an existing project image (sprite, animation frame or tile) in one slot of a Tileset, or clear the slot with asset_key null. Roles come from list_tilesets.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "asset_key": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "entity_id",
+        "role",
+        "asset_key"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "slice_asset_into_tileset",
+    "description": "Cut one existing project image (for example an uploaded sprite) into a 4x4 grid and fill all 16 Tileset slots with the pieces. The pieces are saved in the Tiles folder under the tileset's name. Undoable.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "asset_key": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "entity_id",
+        "asset_key"
       ],
       "additionalProperties": false
     }

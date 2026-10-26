@@ -20,7 +20,7 @@ The engine ships with the shared relay already built in (`DEFAULT_RELAY_URL` in 
 * Nothing connects until the user presses **Connect**; the toolbar dot shows the state.
 * The link contains a private key — anyone with it can edit that user's open project. **Make a new private link** replaces it.
 * **Read-only** lets the AI look without changing anything. Every change can be undone with Ctrl+Z.
-* Limits per user: 90 tool calls per minute and 256 KiB per request. Asset transfers use sequential chunks and are limited to 12 MiB per file.
+* Limits per user: 90 tool calls per minute and 256 KiB per request. Asset transfers use sequential chunks and are limited to 20 MiB per file.
 
 ## Cost
 The relay runs on Cloudflare's **free plan**: it uses a SQLite-backed Durable Object (required on free) with WebSocket hibernation, so an open-but-idle editor costs almost nothing. Free limits are shared across all your users. If the engine grows, the paid Workers plan is about $5/month.
@@ -28,7 +28,8 @@ The relay runs on Cloudflare's **free plan**: it uses a SQLite-backed Durable Ob
 ## What your AI can do
 
 * **Scenes and scripts:** inspect and edit entities, components, scripts, play mode, console, and screenshots.
-* **Assets:** list, rename, and delete sprites, animation frames, and audio; import image/audio files through a chunked upload.
+* **Assets:** list, rename, and delete sprites, animation frames (Animation Clips folder), tile images (Tiles folder) and audio; import image/audio files through a chunked upload of up to 20 MiB each.
+* **Reuse existing images:** add any sprite, frame or tile to an animation clip, put one in a tileset slot, or cut one image into all 16 tile slots.
 * **Animation:** open the animation editor, create/update/delete clips, import image sequences, GIFs, sprite sheets, and image ZIPs, then reorder or delete frames.
 * **Tilemaps and tilesets:** import a custom 4×4 tileset sheet or individual tile image, edit tileset roles and dimensions, and paint/erase map cells.
 * **Navigation and physics:** paint walkable/blocked navigation cells and areas, edit navigation bounds/costs, rename navigation/physics layers, and set Collider2D layer masks.
