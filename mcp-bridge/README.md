@@ -1,6 +1,6 @@
 # Realot Studio MCP Bridge
 
-This add-on lets an MCP-compatible client such as **Claude Desktop** work with the **currently open Realot Studio editor**. It exposes scene/entity/component/script tools and routes each operation to Realot's existing editor and runtime APIs. It does not make changes when it is disconnected.
+This add-on lets an MCP-compatible client such as **Claude Desktop or any AI that accepts custom connectors** work with the **currently open Realot Studio editor**. It exposes scene/entity/component/script tools and routes each operation to Realot's existing editor and runtime APIs. It does not make changes when it is disconnected.
 
 ## What is included
 
@@ -11,7 +11,7 @@ This add-on lets an MCP-compatible client such as **Claude Desktop** work with t
 ## Requirements
 
 - Node.js 20 or newer.
-- Claude Desktop (this package uses a local STDIO MCP server). A hosted `claude.ai` custom connector URL is **not** created by a ZIP file alone; it would require a separately deployed remote service and authentication setup.
+- Claude Desktop or preferred AI (this package uses a local STDIO MCP server). A hosted `claude.ai` custom connector URL is **not** created by a ZIP file alone; it would require a separately deployed remote service and authentication setup.
 - Realot Studio opened in a normal browser tab over HTTP/HTTPS, not by double-clicking an HTML file.
 
 ## Setup on Windows
@@ -66,7 +66,7 @@ This add-on lets an MCP-compatible client such as **Claude Desktop** work with t
 - Inspect: `realot_bridge_status`, `realot_get_status`, `realot_list_scenes`, `realot_list_entities`, `realot_get_entity`, `realot_get_console`.
 - Scene edits: `realot_create_entity`, `realot_update_entity`, `realot_delete_entity`, `realot_add_component`, `realot_update_component`, `realot_remove_component`, `realot_create_scene`, `realot_switch_scene`, `realot_rename_scene`, `realot_delete_scene`.
 - Scripts: `realot_list_scripts`, `realot_get_script`, `realot_set_script`, `realot_validate_script`.
-- Workflow: `realot_validate_scene`, `realot_set_play_mode`, `realot_save_project`.
+- Workflow: `realot_validate_scene`, `realot_set_play_mode`, `realot_save_project etc`.
 
 Use `realot_list_entities` before editing so Claude works with actual entity ids and current component fields. Entity/component scene mutations use Realot's scene undo history where supported. Script code and scene-list edits have different history behavior, so review those changes and save a project backup before large operations.
 
