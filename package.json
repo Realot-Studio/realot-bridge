@@ -12,5 +12,7 @@
   },
   "optionalDependencies": {
     "ws": "^8.18.0"
-  }
+  },
+  "license": "MIT",
+  "description": "Relay that connects an AI app (MCP) to an open Realot Studio editor"
 }
